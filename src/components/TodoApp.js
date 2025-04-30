@@ -1,47 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 import '../App.css';
 
-// Define the CONFIG object that was missing
-const CONFIG = {
-  appTitle: "Todo App",
-  emptyMessage: "No tasks yet. Add one now!",
-  placeholders: {
-    newTask: "Add a new task...",
-    editTask: "Edit task..."
-  },
-  clock: {
-    enabled: true,
-    format: {
-      showDate: true,
-      showTime: true
-    }
-  }
-};
-
 function TodoApp({ username }) {
   const [todos, setTodos] = useState([]);
-  const [completedTodos, setCompletedTodos] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [editValue, setEditValue] = useState('');
   const [editId, setEditId] = useState(null);
   const [time, setTime] = useState(new Date());
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [showHistory, setShowHistory] = useState(false);
-
-  const API_URL = 'https://your-backend-api.com/api/todos'; // Replace with your backend API URL
-
-  // Fetch todos and completed tasks from the backend
-  const fetchTodos = async () => {
-    try {
-      const response = await axios.get(API_URL); // Make an API call to get todos
-      setTodos(response.data.todos);
-      setCompletedTodos(response.data.completedTodos);
-    } catch (error) {
-      console.error("Error fetching todos:", error);
-    }
+  const [completedTodos, setCompletedTodos] = useState([]);
+  
+  // User key
+  const getUserStorageKey = () => {
+    return `todos_${username}`;
+  };
+  
+  const getCompletedStorageKey = () => {
+    return `completed_todos_${username}`;
+  };
+  
+  const CONFIG = {
+    appTitle: "Get Things Done!",
+    localStorage: {
+      enabled: true,
+      key: getUserStorageKey() // User key
+    },
+    clock: {
+      enabled: true,
+      updateInterval: 1000, 
+      format: {
+        showDate: true,
+        showTime: true
+      }
+    },
+    placeholders: {
+      newTask: "Upcoming tasks??",
+      editTask: "Update task"
+    },
+    emptyMessage: "No tasks yet! Add a task to get started."
   };
 
   // Handle responsive design
@@ -49,27 +48,44 @@ function TodoApp({ username }) {
     function handleResize() {
       setIsMobile(window.innerWidth <= 768);
     }
-
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Fetch todos and completed todos when the component mounts
   useEffect(() => {
-    fetchTodos(); // Fetch todos and completed tasks when component mounts
+    if (CONFIG.localStorage.enabled) {
+      const savedTodos = JSON.parse(localStorage.getItem(CONFIG.localStorage.key)) || [];
+      setTodos(savedTodos);
+      
+      const savedCompletedTodos = JSON.parse(localStorage.getItem(getCompletedStorageKey())) || [];
+      setCompletedTodos(savedCompletedTodos);
+    }
+  }, [CONFIG.localStorage.key]); // On storage key change
+
+  useEffect(() => {
+    if (CONFIG.localStorage.enabled) {
+      localStorage.setItem(CONFIG.localStorage.key, JSON.stringify(todos));
+    }
+  }, [todos, CONFIG.localStorage.key]);
+  
+  useEffect(() => {
+    if (CONFIG.localStorage.enabled) {
+      localStorage.setItem(getCompletedStorageKey(), JSON.stringify(completedTodos));
+    }
+  }, [completedTodos, username]);
+
+  useEffect(() => {
+    if (CONFIG.clock.enabled) {
+      const intervalId = setInterval(() => {
+        setTime(new Date());
+      }, CONFIG.clock.updateInterval);
+
+      return () => clearInterval(intervalId); // Cleanup interval
+    }
   }, []);
 
-  // Update the clock every second
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
-
-    return () => clearInterval(intervalId); // Clean up on component unmount
-  }, []);
-
-  // Add a new todo
-  const addTodo = async (e) => {
+  const addTodo = (e) => {
     e.preventDefault();
     if (inputValue.trim()) {
       const newTodo = {
@@ -78,86 +94,63 @@ function TodoApp({ username }) {
         completed: false,
         dateCreated: new Date().toISOString()
       };
-
-      try {
-        const response = await axios.post(API_URL, newTodo); // POST the new todo to the API
-        setTodos([...todos, response.data]);
-        setInputValue('');
-      } catch (error) {
-        console.error("Error adding todo:", error);
-      }
+      setTodos([...todos, newTodo]);
+      setInputValue('');
     }
   };
 
-  // Delete a todo
-  const deleteTodo = async (id) => {
-    try {
-      await axios.delete(`${API_URL}/${id}`); // DELETE request to remove the todo from backend
-      setTodos(todos.filter(todo => todo.id !== id));
-    } catch (error) {
-      console.error("Error deleting todo:", error);
-    }
+  const deleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  // Toggle completion status of a todo
-  const toggleComplete = async (id) => {
-    try {
-      const todoToUpdate = todos.find(todo => todo.id === id);
-      const updatedTodo = { ...todoToUpdate, completed: !todoToUpdate.completed };
-      
-      await axios.patch(`${API_URL}/${id}`, updatedTodo); // PATCH the todo to update it
-      setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo));
-    } catch (error) {
-      console.error("Error toggling todo completion:", error);
-    }
+  const toggleComplete = (id) => {
+    setTodos(
+      todos.map(todo => 
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
-
-  // Mark todo as completed and move it to completed list
-  const completeTask = async (todo) => {
-    const completedTask = { ...todo, dateCompleted: new Date().toISOString() };
+  
+  const completeTask = (todo) => {
+    // Add to completed tasks with completion date
+    const completedTask = {
+      ...todo,
+      dateCompleted: new Date().toISOString()
+    };
     
-    try {
-      await axios.post(`${API_URL}/completed`, completedTask); // POST completed todo to backend
-      await deleteTodo(todo.id); // Remove from active todos
-    } catch (error) {
-      console.error("Error completing task:", error);
-    }
+    setCompletedTodos([completedTask, ...completedTodos]);
+    
+    // Remove from active todos
+    deleteTodo(todo.id);
   };
 
-  // Start editing a todo
   const startEditing = (todo) => {
     setEditId(todo.id);
     setEditValue(todo.task);
   };
 
-  // Save the edited todo
-  const saveEdit = async (e) => {
+  const saveEdit = (e) => {
     e.preventDefault();
     if (editValue.trim()) {
-      const updatedTodo = { id: editId, task: editValue, completed: false };
-      try {
-        await axios.patch(`${API_URL}/${editId}`, updatedTodo); // PATCH the updated todo
-        setTodos(todos.map(todo => todo.id === editId ? updatedTodo : todo));
-        setEditId(null);
-        setEditValue('');
-      } catch (error) {
-        console.error("Error saving edited todo:", error);
-      }
+      setTodos(
+        todos.map(todo =>
+          todo.id === editId ? { ...todo, task: editValue } : todo
+        )
+      );
+      setEditId(null);
+      setEditValue('');
     }
   };
 
-  // Cancel editing
   const cancelEdit = () => {
     setEditId(null);
     setEditValue('');
   };
 
-  // Toggle history modal
   const toggleHistory = () => {
     setShowHistory(!showHistory);
   };
 
-  // Render time string
   const renderTime = () => {
     if (!CONFIG.clock.enabled) return null;
 
@@ -252,15 +245,15 @@ function TodoApp({ username }) {
       </div>
     );
   };
-
+  
   const renderHistoryModal = () => {
     if (!showHistory) return null;
-
+    
     const formatDate = (dateString) => {
       const date = new Date(dateString);
       return date.toLocaleString();
     };
-
+    
     return (
       <div className="history-overlay">
         <div className="history-container">
@@ -268,7 +261,7 @@ function TodoApp({ username }) {
             <h2>Completed Tasks History</h2>
             <button className="history-close-btn" onClick={toggleHistory}>✕</button>
           </div>
-
+          
           <div className="history-content">
             {completedTodos.length === 0 ? (
               <p className="empty-message">No completed tasks yet!</p>
