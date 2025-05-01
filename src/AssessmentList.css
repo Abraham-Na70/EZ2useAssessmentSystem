@@ -1,0 +1,213 @@
+.assessment-list-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+  }
+  
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .list-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  .new-assessment-btn {
+    background-color: #4f46e5;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  .new-assessment-btn:hover {
+    background-color: #4338ca;
+  }
+  
+  .filters-section {
+    background-color: #f9fafb;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  
+  .filters-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+  }
+  
+  .filter-group {
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  .filter-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4b5563;
+    margin-bottom: 6px;
+  }
+  
+  .filter-group input,
+  .filter-group select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .apply-filters-btn {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .clear-filters-btn {
+    background-color: transparent;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .no-assessments {
+    padding: 32px;
+    text-align: center;
+    color: #6b7280;
+  }
+  
+  .assessment-table-container {
+    overflow-x: auto;
+  }
+  
+  .assessment-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .assessment-table th,
+  .assessment-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .assessment-table th {
+    font-weight: 600;
+    color: #4b5563;
+    background-color: #f9fafb;
+  }
+  
+  .assessment-table tr:hover {
+    background-color: #f9fafb;
+  }
+  
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .status-pass {
+    background-color: #d1fae5;
+    color: #047857;
+  }
+  
+  .status-fail {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+  
+  .status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+  
+  .actions-cell {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .action-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .view-btn {
+    background-color: #e0e7ff;
+    color: #4f46e5;
+  }
+  
+  .edit-btn {
+    background-color: #e0f2fe;
+    color: #0284c7;
+  }
+  
+  .delete-btn {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: none;
+  }
+  
+  .pagination {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .pagination-btn {
+    padding: 6px 12px;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #4b5563;
+  }
+  
+  .pagination-btn.active {
+    background-color: #4f46e5;
+    color: white;
+    border-color: #4f46e5;
+  }
+  
+  .pagination-btn:disabled {
+    color: #9ca3af;
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+  }
