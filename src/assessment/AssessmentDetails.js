@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import '../AssessmentDetails.css';
 
@@ -7,11 +7,7 @@ const AssessmentDetail = ({ user, setLoading, setError }) => {
   const navigate = useNavigate();
   const [assessment, setAssessment] = useState(null);
 
-  useEffect(() => {
-    fetchAssessmentDetails();
-  }, [id]);
-
-  const fetchAssessmentDetails = async () => {
+  const fetchAssessmentDetails = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -32,7 +28,11 @@ const AssessmentDetail = ({ user, setLoading, setError }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, setLoading, setError]); // useCallback dependencies
+
+  useEffect(() => {
+    fetchAssessmentDetails();
+  }, [fetchAssessmentDetails]); // useEffect now correctly depends on the memoized function
 
   const handleDeleteAssessment = async () => {
     if (!window.confirm('Are you sure you want to delete this assessment?')) {
@@ -134,31 +134,32 @@ const AssessmentDetail = ({ user, setLoading, setError }) => {
       <div className="assessment-details">
         <h3>Assessment Details</h3>
         
-{assessment.parameters.map((parameter) => ( // parameter.id is available
-  <div key={parameter.id} className="parameter-section"> {/* Use parameter.id */}
-    <div className="parameter-header">
-      <h4>{parameter.name}</h4> {/* Use parameter.name */}
-      <span className="error-count">Total Errors: {parameter.total_errors}</span>
-    </div>
-    <div className="aspects-container">
-      {parameter.aspects.map((aspect) => ( // aspect.id is available
-        <div key={aspect.id} className="aspect-section"> {/* Use aspect.id */}
-          <h5>{aspect.name}</h5> {/* Use aspect.name */}
-          <table className="sub-aspects-table">
-            <tbody>
-              {aspect.sub_aspects.map((subAspect) => (
-                <tr key={subAspect.sub_aspect_id}>
-                  <td>{subAspect.name}</td>
-                  <td className="error-value">{subAspect.error_count}</td> {/* Added a class */}
-                </tr>
+        {/* === JSX CORRECTED HERE === */}
+        {assessment.parameters.map((parameter) => (
+          <div key={parameter.parameter_id} className="parameter-section"> {/* Use parameter.parameter_id */}
+            <div className="parameter-header">
+              <h4>{parameter.parameter_name}</h4> {/* Use parameter.parameter_name */}
+              <span className="error-count">Total Errors: {parameter.total_errors}</span>
+            </div>
+            <div className="aspects-container">
+              {parameter.aspects.map((aspect) => (
+                <div key={aspect.aspect_id} className="aspect-section"> {/* Use aspect.aspect_id */}
+                  <h5>{aspect.aspect_name}</h5> {/* Use aspect.aspect_name */}
+                  <table className="sub-aspects-table">
+                    <tbody>
+                      {aspect.sub_aspects.map((subAspect) => (
+                        <tr key={subAspect.sub_aspect_id}>
+                          <td>{subAspect.sub_aspect_name}</td> {/* Use subAspect.sub_aspect_name */}
+                          <td className="error-value">{subAspect.error_count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               ))}
-            </tbody>
-          </table>
-        </div>
-      ))}
-    </div>
-  </div>
-))}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../AssessmentList.css';
 
-const AssessmentList = ({ user, setLoading, setError }) => {
+const AssessmentList = ({ user, onLogout, setLoading, setError }) => {
   const [assessments, setAssessments] = useState([]);
   const [filters, setFilters] = useState({
     chapter_id: '',
@@ -15,62 +15,63 @@ const AssessmentList = ({ user, setLoading, setError }) => {
   const [itemsPerPage] = useState(10);
 
   useEffect(() => {
+    // This effect now correctly re-fetches data when filters change.
+    const fetchChapters = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:3000/api/chapters', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch chapters');
+        }
+        
+        const data = await response.json();
+        setChapters(data.data || []);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    
+    const fetchAssessments = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('token');
+        
+        // Build query string from filters state
+        const queryParams = new URLSearchParams();
+        if (filters.chapter_id) queryParams.append('chapter_id', filters.chapter_id);
+        if (filters.status) queryParams.append('status', filters.status);
+        if (filters.start_date) queryParams.append('start_date', filters.start_date);
+        if (filters.end_date) queryParams.append('end_date', filters.end_date);
+      
+        const url = `http://localhost:3000/api/assessments?${queryParams.toString()}`;
+        
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch assessments');
+        }
+        
+        const data = await response.json();
+        setAssessments(data.data || []);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchChapters();
     fetchAssessments();
-  }, []);
-
-  const fetchChapters = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/chapters', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch chapters');
-      }
-      
-      const data = await response.json();
-      setChapters(data.data || []);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
-  const fetchAssessments = async () => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      
-      // Build query string from filters
-      const queryParams = new URLSearchParams();
-      if (filters.chapter_id) queryParams.append('chapter_id', filters.chapter_id);
-      if (filters.status) queryParams.append('status', filters.status);
-      if (filters.start_date) queryParams.append('start_date', filters.start_date);
-      if (filters.end_date) queryParams.append('end_date', filters.end_date);
-      
-      const url = `http://localhost:3000/api/assessments?${queryParams.toString()}`;
-      
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch assessments');
-      }
-      
-      const data = await response.json();
-      setAssessments(data.data || []);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [filters, setError, setLoading]); // Effect dependencies
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -83,7 +84,7 @@ const AssessmentList = ({ user, setLoading, setError }) => {
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     setCurrentPage(1); // Reset to first page when applying filters
-    fetchAssessments();
+    // The useEffect hook will automatically trigger fetchAssessments because 'filters' is a dependency
   };
 
   const handleClearFilters = () => {
@@ -123,12 +124,6 @@ const AssessmentList = ({ user, setLoading, setError }) => {
     }
   };
 
-  // Get current items for pagination
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = assessments.slice(indexOfFirstItem, indexOfLastItem);
-  
-  // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const getStatusClass = (status) => {
@@ -148,20 +143,50 @@ const AssessmentList = ({ user, setLoading, setError }) => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  // Get current items for pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = assessments.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <div className="assessment-list-container">
+      {/* === LIST HEADER MODIFIED === */}
       <div className="list-header">
-        <h2>Assessments</h2>
-        <Link to="/dashboard/assessments/new" className="new-assessment-btn">
-          Create New Assessment
-        </Link>
+        <div className="list-header-left">
+          <h2>Assessments</h2>
+          <div className="user-info-block">
+            <span>Hello, {user?.username || 'User'} 👋🏻</span>
+            <button onClick={onLogout} className="logout-btn-main">Logout</button>
+          </div>
+        </div>
+        
+        <div className="list-header-right">
+          {/* Role-based button rendering */}
+          {user?.role === 'admin' && (
+            <div className="action-grid-admin">
+              <Link to="/dashboard/parameters" className="action-grid-btn">+ Parameters</Link>
+              <Link to="/dashboard/aspects" className="action-grid-btn">+ Aspects</Link>
+              <Link to="/dashboard/subaspects" className="action-grid-btn">+ Sub-Aspects</Link>
+              <Link to="/dashboard/assessments/new" className="action-grid-btn">+ Assessment</Link>
+              <Link to="/dashboard/chapters/new" className="action-grid-btn">+ Chapter</Link>
+              <Link to="/dashboard/assessments" className="action-grid-btn">Home</Link>
+            </div>
+          )}
+          {user?.role === 'assessor' && (
+            <div className="action-grid-assessor">
+              <Link to="/dashboard/assessments/new" className="action-grid-btn">+ Assessment</Link>
+              <Link to="/dashboard/subaspects" className="action-grid-btn">+ Sub-Aspects</Link>
+              <Link to="/dashboard/assessments" className="action-grid-btn">Home</Link>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="filters-section">
         <form onSubmit={handleFilterSubmit} className="filters-form">
           <div className="filter-row">
             <div className="filter-group">
-              <label htmlFor="chapter_id">Chapter:</label>
+              <label htmlFor="chapter_id_filter">Chapter:</label>
               <select 
                 id="chapter_id_filter" 
                 name="chapter_id" 
@@ -224,7 +249,7 @@ const AssessmentList = ({ user, setLoading, setError }) => {
 
       {assessments.length === 0 ? (
         <div className="no-assessments">
-          <p>No assessments found. Create your first assessment by clicking the button above.</p>
+          <p>No assessments found. Start by creating an assessment or chapter.</p>
         </div>
       ) : (
         <>
@@ -276,9 +301,7 @@ const AssessmentList = ({ user, setLoading, setError }) => {
             </table>
           </div>
 
-          {/* Pagination */}
-          {assessments.length > itemsPerPage && (
-            <div className="pagination">
+          <div className="pagination">
               <button 
                 onClick={() => paginate(currentPage - 1)} 
                 disabled={currentPage === 1}
@@ -305,7 +328,6 @@ const AssessmentList = ({ user, setLoading, setError }) => {
                 Next
               </button>
             </div>
-          )}
         </>
       )}
     </div>

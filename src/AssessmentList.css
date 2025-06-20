@@ -5,33 +5,99 @@
     padding: 24px;
   }
   
+  /* === LIST HEADER MODIFIED === */
   .list-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    align-items: flex-start; /* Align items to the top */
+    margin-bottom: 24px;
+    gap: 20px;
   }
   
-  .list-header h2 {
-    font-size: 20px;
-    font-weight: 600;
+  .list-header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .list-header-left h2 {
+    font-size: 2.25rem; /* Larger title */
+    font-weight: 700;
     color: #1f2937;
   }
   
-  .new-assessment-btn {
+  .user-info-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1rem; /* 16px */
+    color: #4b5563;
+  }
+  
+  .logout-btn-main {
+    background: none;
+    border: none;
+    color: #4f46e5;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0;
+    cursor: pointer;
+  }
+  .logout-btn-main:hover {
+    text-decoration: underline;
+  }
+
+  .list-header-right {
+    flex-shrink: 0; /* Prevent the grid from shrinking */
+  }
+
+  /* === NEW BUTTON GRIDS === */
+  .action-grid-admin {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    justify-items: end; /* Align items to the right of their cell */
+  }
+  
+  /* Place items in the grid to form the RIGHT-ALIGNED triangle */
+  .action-grid-admin > *:nth-child(4) { grid-column: 2 / 3; }
+  .action-grid-admin > *:nth-child(5) { grid-column: 3 / 4; }
+  .action-grid-admin > *:nth-child(6) { grid-column: 3 / 4; }
+  
+  .action-grid-assessor {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    justify-items: end;
+  }
+
+  /* Place items in the grid to form the RIGHT-ALIGNED triangle */
+  .action-grid-assessor > *:nth-child(3) { grid-column: 2 / 3; }
+
+
+  .action-grid-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #4f46e5;
     color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: bold; /* Bold text as requested */
     font-size: 14px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.1s;
+    text-align: center;
+    white-space: nowrap; /* Prevent text wrapping */
+    min-width: 140px; /* Set a min-width for consistency */
   }
   
-  .new-assessment-btn:hover {
+  .action-grid-btn:hover {
     background-color: #4338ca;
+    transform: translateY(-1px);
   }
-  
+
+  /* --- Styles below are largely unchanged, just included for completeness --- */
+
   .filters-section {
     background-color: #f9fafb;
     border-radius: 6px;
@@ -160,7 +226,7 @@
     gap: 8px;
   }
   
-  .action-btn {
+  .action-btn { /* This styles the old table buttons, can be kept for now */
     padding: 4px 10px;
     border-radius: 4px;
     font-size: 12px;
@@ -168,21 +234,9 @@
     text-align: center;
   }
   
-  .view-btn {
-    background-color: #e0e7ff;
-    color: #4f46e5;
-  }
-  
-  .edit-btn {
-    background-color: #e0f2fe;
-    color: #0284c7;
-  }
-  
-  .delete-btn {
-    background-color: #fee2e2;
-    color: #b91c1c;
-    border: none;
-  }
+  .view-btn { background-color: #e0e7ff; color: #4f46e5; }
+  .edit-btn { background-color: #e0f2fe; color: #0284c7; }
+  .delete-btn { background-color: #fee2e2; color: #b91c1c; border: none; }
   
   .pagination {
     margin-top: 24px;
