@@ -1,0 +1,228 @@
+/* src/SubAspectManagement.css */
+
+.sub-aspect-management-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.sub-aspect-management-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.sub-aspect-management-header h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.sub-aspect-management-header p {
+    color: #666;
+    font-size: 0.95em;
+}
+
+.sub-aspect-form-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.sub-aspect-form-section h3 {
+    color: #444;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sub-aspect-form .form-group {
+    margin-bottom: 15px;
+}
+
+.sub-aspect-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.sub-aspect-form input[type="text"],
+.sub-aspect-form select {
+    width: calc(100% - 20px); /* Account for padding */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box; /* Include padding in width */
+}
+
+.sub-aspect-form input.input-error,
+.sub-aspect-form select.input-error {
+    border-color: #dc3545; /* Red border for errors */
+}
+
+.sub-aspect-form .error-message {
+    color: #dc3545;
+    font-size: 0.85em;
+    margin-top: 5px;
+    display: block;
+}
+
+.sub-aspect-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.sub-aspect-form .submit-btn,
+.sub-aspect-form .cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
+
+.sub-aspect-form .submit-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.sub-aspect-form .submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.sub-aspect-form .cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.sub-aspect-form .cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Sub-Aspect List Styling */
+.sub-aspect-list-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.sub-aspect-list-section h3 {
+    color: #444;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.sub-aspect-list-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.parameter-item {
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.parameter-name {
+    color: #007bff;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.aspects-list-nested {
+    list-style: none;
+    padding-left: 0;
+}
+
+.aspect-item-nested {
+    background-color: #f2f2f2;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-left: 15px; /* Indent nested aspects */
+}
+
+.aspect-item-nested .aspect-name {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+
+.sub-aspect-list-inner {
+    list-style: none;
+    padding-left: 0;
+}
+
+.sub-aspect-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #c0c0c0;
+    margin-left: 15px; /* Indent sub-aspects */
+}
+
+.sub-aspect-item:last-child {
+    border-bottom: none;
+}
+
+.sub-aspect-name {
+    font-weight: 500;
+    color: #333;
+    flex-grow: 1;
+}
+
+.sub-aspect-actions button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-left: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.sub-aspect-actions .edit-btn {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.sub-aspect-actions .edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.sub-aspect-actions .delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.sub-aspect-actions .delete-btn:hover {
+    background-color: #c82333;
+}
+
+.no-sub-aspects-message, .no-aspects-message {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    margin-top: 15px;
+}

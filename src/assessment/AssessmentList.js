@@ -22,7 +22,7 @@ const AssessmentList = ({ user, setLoading, setError }) => {
   const fetchChapters = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/api/assessments/data/chapters', {
+      const response = await fetch('http://localhost:3000/api/chapters', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -115,7 +115,6 @@ const AssessmentList = ({ user, setLoading, setError }) => {
         throw new Error('Failed to delete assessment');
       }
       
-      // Remove deleted assessment from state
       setAssessments(prev => prev.filter(assessment => assessment.id !== id));
     } catch (error) {
       setError(error.message);
@@ -164,15 +163,15 @@ const AssessmentList = ({ user, setLoading, setError }) => {
             <div className="filter-group">
               <label htmlFor="chapter_id">Chapter:</label>
               <select 
-                id="chapter_id" 
+                id="chapter_id_filter" 
                 name="chapter_id" 
                 value={filters.chapter_id}
                 onChange={handleFilterChange}
               >
                 <option value="">All Chapters</option>
                 {chapters.map(chapter => (
-                  <option key={chapter.id} value={chapter.id}>
-                    {chapter.name}
+                <option key={chapter.chapter_id} value={chapter.chapter_id}>
+                  {chapter.chapter_name}
                   </option>
                 ))}
               </select>

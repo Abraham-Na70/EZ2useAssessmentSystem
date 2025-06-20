@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import '../AssessmentApp.css';
 
+
 // Import assessment components
 import AssessmentList from './AssessmentList'; // Fixed: remove 'assessment/' folder prefix
 import AssessmentDetail from './AssessmentDetails'; // Fixed: proper filename with 's'
 import AssessmentForm from './AssessmentForm';
+import AspectManagement from './AspectManagement';
+import SubAspectManagement from './SubAspectManagement';
+import ParameterManagement from './ParameterManagement';
+import ChapterForm from './ChapterForm';
 
 const AssessmentApp = ({ user, onLogout }) => {
   const navigate = useNavigate();
@@ -34,6 +39,16 @@ const AssessmentApp = ({ user, onLogout }) => {
         <nav className="dashboard-nav">
           <Link to="/dashboard/assessments" className="nav-link">Assessments</Link>
           <Link to="/dashboard/assessments/new" className="nav-link">New Assessment</Link>
+          <Link to="/dashboard/chapters/new" className="nav-link">Add Chapter</Link>
+            {user?.role === 'admin' && (
+              <> 
+          <Link to="/dashboard/parameters" className="nav-Link">Manage Parameters</Link> 
+          <Link to="/dashboard/aspects" className="nav-link">Manage Aspects</Link>
+              </>
+            )}
+            {(user?.role === 'admin' || user?.role === 'assessor') && ( // conditional rendering, Sub-aspect for admin & assessor
+          <Link to="/dashboard/subaspects" className="nav-link">Manage Sub-Aspects</Link>
+            )}
         </nav>
         <div className="user-section">
           <span className="user-greeting">
@@ -81,7 +96,35 @@ const AssessmentApp = ({ user, onLogout }) => {
               setError={setError} 
             />
           } />
-        </Routes>
+          <Route path="parameters" element={
+            <ParameterManagement
+              user={user} //component role check
+              setLoading={setLoading}
+              setError={setError}
+            />
+          } />
+          <Route path="aspects" element={
+            <AspectManagement
+              user={user} // comporole check
+              setLoading={setLoading}
+              setError={setError}
+            />
+          } />
+          <Route path="subaspects" element={
+            <SubAspectManagement
+              user={user} // compo role check
+              setLoading={setLoading}
+              setError={setError}
+            />
+          } />
+          <Route path="chapters/new" element={
+            <ChapterForm
+              setLoading={setLoading}
+              setError={setError}
+            />
+          } />
+          </Routes>
+          
       </main>
 
       {loading && (

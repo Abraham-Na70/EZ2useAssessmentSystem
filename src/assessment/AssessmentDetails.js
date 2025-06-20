@@ -134,38 +134,31 @@ const AssessmentDetail = ({ user, setLoading, setError }) => {
       <div className="assessment-details">
         <h3>Assessment Details</h3>
         
-        {assessment.parameters.map((parameter, index) => (
-          <div key={index} className="parameter-section">
-            <div className="parameter-header">
-              <h4>{parameter.parameter_name}</h4>
-              <span className="error-count">Total Errors: {parameter.total_errors}</span>
-            </div>
-            
-            <div className="aspects-container">
-              {parameter.aspects.map((aspect, aspectIndex) => (
-                <div key={aspectIndex} className="aspect-section">
-                  <h5>{aspect.aspect_name}</h5>
-                  <table className="sub-aspects-table">
-                    <thead>
-                      <tr>
-                        <th>Sub-Aspect</th>
-                        <th>Error Count</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {aspect.sub_aspects.map((subAspect, subAspectIndex) => (
-                        <tr key={subAspectIndex}>
-                          <td>{subAspect.sub_aspect_name}</td>
-                          <td>{subAspect.error_count}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+{assessment.parameters.map((parameter) => ( // parameter.id is available
+  <div key={parameter.id} className="parameter-section"> {/* Use parameter.id */}
+    <div className="parameter-header">
+      <h4>{parameter.name}</h4> {/* Use parameter.name */}
+      <span className="error-count">Total Errors: {parameter.total_errors}</span>
+    </div>
+    <div className="aspects-container">
+      {parameter.aspects.map((aspect) => ( // aspect.id is available
+        <div key={aspect.id} className="aspect-section"> {/* Use aspect.id */}
+          <h5>{aspect.name}</h5> {/* Use aspect.name */}
+          <table className="sub-aspects-table">
+            <tbody>
+              {aspect.sub_aspects.map((subAspect) => (
+                <tr key={subAspect.sub_aspect_id}>
+                  <td>{subAspect.name}</td>
+                  <td className="error-value">{subAspect.error_count}</td> {/* Added a class */}
+                </tr>
               ))}
-            </div>
-          </div>
-        ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+    </div>
+  </div>
+))}
       </div>
     </div>
   );

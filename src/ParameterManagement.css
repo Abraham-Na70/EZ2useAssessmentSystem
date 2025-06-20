@@ -1,0 +1,182 @@
+/* src/ParameterManagement.css */
+
+.parameter-management-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Slightly smaller for parameters */
+    margin: 20px auto;
+}
+
+.parameter-management-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.parameter-management-header h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.parameter-management-header p {
+    color: #666;
+    font-size: 0.95em;
+}
+
+.parameter-form-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.parameter-form-section h3 {
+    color: #444;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.parameter-form .form-group {
+    margin-bottom: 15px;
+}
+
+.parameter-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.parameter-form input[type="text"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.parameter-form input.input-error {
+    border-color: #dc3545;
+}
+
+.parameter-form .error-message {
+    color: #dc3545;
+    font-size: 0.85em;
+    margin-top: 5px;
+    display: block;
+}
+
+.parameter-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.parameter-form .submit-btn,
+.parameter-form .cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s ease;
+}
+
+.parameter-form .submit-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.parameter-form .submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.parameter-form .cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.parameter-form .cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Parameter List Styling */
+.parameter-list-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.parameter-list-section h3 {
+    color: #444;
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.parameter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.parameter-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background-color: #f8f9fa;
+}
+
+.parameter-name {
+    font-weight: bold;
+    color: #333;
+    flex-grow: 1;
+    font-size: 1.05em;
+}
+
+.parameter-actions button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.parameter-actions .edit-btn {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.parameter-actions .edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.parameter-actions .delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.parameter-actions .delete-btn:hover {
+    background-color: #c82333;
+}
+
+.no-parameters-message {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    margin-top: 15px;
+}
